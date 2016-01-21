@@ -1,0 +1,348 @@
+<head>
+    <title>Simulator</title>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Oswald" rel='stylesheet' type='text/css'>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+         })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+         
+         ga('create', 'UA-67487162-1', 'auto');
+         ga('send', 'pageview');
+         
+        </script>
+</head>
+
+
+<script>
+    $(document).ready(function(){
+        setTimeout(function(){
+        $.ajax({
+        url: '{% url "simulator:interface" %}',
+        success: function(data) {
+        $('#wrapper').html(data);
+        }
+        });
+        }, 10000);
+        
+        setTimeout(function(){
+        $.ajax({
+        url: '{% url "simulator:interface" %}',
+        success: function(data) {
+        $('#comment_area').html(data);
+        }
+        });
+        }, 5000);
+    });
+</script>
+
+
+<style>
+    div.container {
+        border: 10px solid grey;
+        width: 100%;
+        height: 100%;
+        overflow: scroll;
+    }
+
+div.col-sm-4 {
+    padding: 20px;
+}
+
+div.row:not(#special_row) {
+    width: 80%;
+    height: 300px;
+}
+
+p.input {
+    text-align: center;
+    margin: 0px;
+    color: white;
+    width: 100%;
+}
+
+
+div.recent_comments {
+    position: absolute;
+    width: 100%;
+    right: 0%;
+    top: 0%;
+}
+
+div.comment_area {
+    position: fixed;
+    padding-top: 30px;
+    bottom: 0%;
+    width: 20%;
+    right:0%;
+    height: 100%;
+    background-color: rgba(192, 192, 192, 0.6);
+    box-shadow: 0px 0px 15px rgba(192, 192, 192, 0.8);
+    padding-top: 20px;
+}
+
+#author_input {
+    width: 90%;
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 0px;
+    height: 20px;
+    padding: 5px;
+}
+
+input {
+    text-align: center;
+}
+
+h5 {
+    background-color: red;
+    color: white;
+    text-align: center;
+}
+
+#textarea {
+    width: 90%;
+    border: 0px;
+    padding: 5px;
+    border-top: 1px rgba(192, 192, 192, 0.7);
+    background-color: rgba(255, 255, 255, 0.8);
+    height: 100px;
+    text-align: center;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.no-bootstrap > input [type=submit] {
+    height: 20px;
+    background-color: rbga(255, 255, 255, 0.5);
+    border-radius: 0px;
+    color: rgba(192, 192, 192, 0.5);
+}
+
+div.inner_area {
+    @import "bootstrap.less";
+    padding-top: 20px;
+    border-top: 1px solid white;
+    position: absolute;
+    bottom: 0%;
+    right: 0%;
+    width:100%;
+    background-color: rgba(192, 192, 192, 0.3);
+}
+
+p.author, p.comment {
+    padding: 2px;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    font-family: arial;
+    font-size: 12px;
+    color: black;
+}
+
+p.author {
+    text-align: center;
+    font-weight: bold;
+}
+
+p.comment {
+}
+
+div.box {
+    padding-bottom: 20px;
+    padding-top: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 1.0);
+}
+
+p.title {
+    font-family: arial;
+    font-size: 18px;
+    color: rgba(92, 92, 92, 0.7);
+    text-align: center;
+    margin-left:auto;
+    margin-right: auto;
+    padding: 3px;
+    margin-top: 20px;
+    margin-bottom: 0px;
+    background-color: rgba(255, 255, 255, 0.3);
+    font-weight:bold;
+}
+
+body {
+    background-color: black;
+    color: orange;
+    font-family: Oswald;
+}
+
+p {
+    color: orange;
+}
+
+
+li {
+    color: white;
+}
+
+input [type = radio] {
+    color: white;
+}
+
+strong {
+    font-weight: normal;
+    color: white;
+}
+</style>
+<body>
+
+{% if error_message %}
+<div class = "row"><strong>{{ error_message }}</strong></div>
+{% endif %}
+
+<div id = "wrapper">
+
+<div class = "row">
+<div id = "user_info" class = "col-sm-4">
+    <div class = "container">
+    <h5>User Information</h5>
+    <p>User Name: {{ user.username }}</p>
+    <p>Capital: ${{ capital }}</p>
+    <p>Total Inventory Value: ${{personal_asset}}</p>
+    <p style = "color: red">Net Worth: ${{net_worth}}</p>
+    <ul>My Items in Stock:
+        {% for item_sell in to_sell_list %}
+        <li>{{ item_sell.value.name }} @ ${{ item_sell.value.current_value }}</li>
+        {% endfor %}
+    </ul>
+    
+    <ul>My Items on Sale:
+        {% for item_sale in on_sale_list %}
+        <li>{{ item_sale.value.name }} @ ${{ item_sale.selling_price }}</li>
+        {% endfor %}
+    </ul>
+    </div>
+</div>
+
+<div id = "market" class = "col-sm-4">
+    <div class = "container">
+    <h5>Quote List:</h5>
+    <ul>
+        {% for item in to_buy_list %}
+        <li>{{item.value.name}} @ ${{ item.selling_price }} from {{item.owner.username}}</li>
+        {% endfor %}
+    </ul>
+    <p>Total Market Value: ${{market_value}}</p>
+    </div class = "container">
+</div>
+
+<div class = "col-sm-4">
+    <div class = "container">
+    <h5>Reference Market Prices</h5>
+    <ul>
+    {% for price in reference_price_list %}
+    <li>{{ price.name }} @ ${{price.current_value}}</li>
+    {% endfor %}
+    </ul>
+    </div class = "container">
+</div>
+
+</div class = "row">
+
+
+<div class = "row">
+    <div id = "sell" class = "col-sm-4">
+        <div class = "container">
+        <h5>Sell</h5>
+        <form action = "{% url 'simulator:sell' %}" method = "post">
+            {% csrf_token %}
+            Choose from the following items:<br />
+            {% for item in to_sell_list %}
+            <input type = "radio" name = "id" value = "{{ item.id }}" /><strong> {{ item.value.name }}</strong><br />
+            {% endfor %}
+            <br />
+            Select from the following prices:
+            <select name = "selling_price">
+            {% for price in price_list %}
+            <option value = {{ price }}>{{ price }}</option>
+            {% endfor %}
+            </select>
+            <br />
+            <input type = "submit" value = "Sell" style = "margin-top: 10px;" />
+        </form>
+        </div class = "container">
+    </div>
+    
+    <div id = "buy" class = "col-sm-4">
+        <div class = "container">
+        <h5>Buy</h5>
+        <form action = "{% url 'simulator:buy' %}" method = "post">
+            {% csrf_token %}
+            Select one to buy:<br />
+            {% for item in to_buy_list %}
+            <input type = "radio" name = "item_id" value = "{{ item.id }}"><strong> {{ item.value.name }} @ ${{ item.selling_price }} from {{ item.owner.username }}</strong><br />
+            {% endfor %}
+            <input style = "margin-top: 10px;" type = "submit" value = "buy" />
+        </form>
+        </div class = "container">
+    </div>
+        
+    
+    <div id = "combine" class = "col-sm-4">
+        <div class = "container">
+        <h5>Create</h5>
+        <p style = "color: grey">Create a more valuable item from any two you currently own.</p>
+        <form action = "{% url 'simulator:combine' %}" method = "post">
+            {% csrf_token %}
+        <div class = "row" id = "special_row">
+            <div class = "col-sm-6">
+                <p>First Item</p>
+                {% for item in to_sell_list %}
+                <input type = "radio" name = "first_item_id" value = "{{ item.id }}"><strong> {{ item.value.name }}</strong><br />
+                {% endfor %}
+            </div>
+            
+            <div class = "col-sm-6">
+                <p>Second Item</p>
+                {% for item in to_sell_list %}
+                <input type = "radio" name = "second_item_id" value = "{{ item.id }}"><strong> {{ item.value.name }}</strong><br />
+                    {% endfor %}
+            </div>
+        </div>
+        <input type = "submit" value = "Create" style = "margin-top: 10px;">
+        </form>
+        </div>
+    </div>
+    
+</div>
+<i style = "font-size: 12px; color: yellow; position: fixed; bottom: 10px; left: 10px;">Note: $1 of commission fee is charged per trade.<br />You cannot create a new product using two identical items.<br /><a href = "{% url 'simulator:sharing_interface' %}">Go to Sharing Economy Simulator</a></i>
+</body>
+</div>
+
+<div class = "comment_area">
+    
+    <div class = "recent_comments" id = "comment_area">
+        <p class = "title">Comments</p>
+        {% for comment in comment_list %}
+        <div class = "box">
+            <p class = "author">{{ comment.author }}</p>
+            <p class = "comment">{{ comment.comment_text }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class = "inner_area">
+        <form action = "{% url 'simulator:comment' %}" method = "post">
+            {% csrf_token %}
+            <p class = "input">
+            <textarea required maxlength = "140" id = "textarea" rows = "4" cols = "50" name = "comment_text" placeholder = "Plese enter your lovely comment" style = "color: black; font-size: 90%;"></textarea>
+            </p>
+            <p class = "input">
+            <input id = "button" style = "color: black; font-size: 85%;" type = "submit" value = "Comment" />
+            </p>
+        </form>
+    </div>
+</div>
+

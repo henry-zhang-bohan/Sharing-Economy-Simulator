@@ -1,0 +1,19 @@
+Tranditional Business Model Simulator
+<form action = "{% url 'simulator:login_simulator' %}" method = "post">
+	{% csrf_token %}
+	<input type = "text" name = "username" placeholder = "User Name" />
+	<br />
+	<input type = "password" name = "password" placeholder = "Password" />
+	<br />
+	<input type = "submit" value = "Log In" />
+</form>
+
+Sharing Economy Simulator
+<form action = "{% url 'simulator:login_sharing_simulator' %}" method = "post">
+	{% csrf_token %}
+	<input type = "text" name = "username" placeholder = "User Name" />
+	<br />
+	<input type = "password" name = "password" placeholder = "Password" />
+	<br />
+	<input type = "submit" value = "Log In" />
+</form>

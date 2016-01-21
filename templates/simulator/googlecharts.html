@@ -1,0 +1,18 @@
+{% load googlecharts %}
+{# container #}
+<div id="out"></div>
+{% googlecharts %}
+    {% data values "out_data" %}
+        {% col "string" "Name" %}"{{ username }}"{% endcol %}
+        {% col "number" "Value" %}{{ net_worth }}{% endcol %}
+    {% enddata %}
+    {% options "out_options" %}
+        kind: "PieChart",
+        options: {
+            width: 300,
+            height: 240
+        }
+    {% endoptions %}
+    {# chart is assembled from container, data and options #}
+    {% graph "out" "out_data" "out_options" %}
+{% endgooglecharts %}
